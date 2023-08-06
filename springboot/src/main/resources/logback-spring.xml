@@ -3,6 +3,7 @@
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <property name="consoleLogPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN:-%5p}) [%thread] %clr(${PID:- }){magenta} --- %clr(%F:%L[%M]){cyan} : %msg%n"/>
     <property name="fileLogPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} [%thread] ${PID:- } --- %F:%L[%M] : %msg%n"/>
+    <property name="appName" value="springboot-api"/>
     <property name="logPath" value="./was_logs"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -14,17 +15,41 @@
         </encoder>
     </appender>
 
+    <appender name="loki" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>http://127.0.0.1:3100/api/prom/push</url><!--
+            <url>http://127.0.0.1:3100/loki/api/v1/push</url>
+            -->
+        </http>
+        <format>
+            <label>
+                <pattern>app=${appName},host=${HOSTNAME},level=%level</pattern>
+                <readMarkers>true</readMarkers>
+            </label>
+            <message>
+                <pattern>
+                    {
+                    "level":"%level",
+                    "class":"%logger{36}",
+                    "thread":"%thread",
+                    "message": "%message",
+                    "requestId": "%X{X-Request-ID}"
+                    }
+                </pattern>
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+    </appender>
+
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>info</level>
         </filter>
         <file>${logPath}/server.log</file>
         <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${logPath}/server.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxFileSize>10MB</maxFileSize>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -49,6 +74,7 @@
     <springProfile name="live">
         <root level="info">
             <appender-ref ref="console"/>
+            <appender-ref ref="loki"/>
             <appender-ref ref="file"/>
         </root>
     </springProfile>
