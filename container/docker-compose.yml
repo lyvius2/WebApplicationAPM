@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/config:/etc/prometheus
+      - ./prometheus/volume:/prometheus
+    ports:
+      - "9100:9090"
+    expose:
+      - "9100"
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
+    networks:
+      - valkyrie
+    mem_limit: "512mb"
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    volumes:
+      - ./grafana/volume:/var/lib/grafana
+    restart: always
+    networks:
+      - valkyrie
+    mem_limit: "512mb"
+
+networks:
+  valkyrie:
+    driver: bridge
