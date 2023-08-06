@@ -26,3 +26,20 @@ spring:
     hibernate:
       ddl-auto: create
       use-new-id-generator-mappings: false
+
+springdoc:
+  show-actuator: true
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info, metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
