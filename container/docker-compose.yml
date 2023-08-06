@@ -15,6 +15,10 @@ services:
       - '--web.enable-lifecycle'
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      - TZ=Asia/Seoul
     networks:
       - valkyrie
     mem_limit: "512mb"
@@ -28,6 +32,10 @@ services:
     volumes:
       - ./grafana/volume:/var/lib/grafana
     restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      - TZ=Asia/Seoul
     networks:
       - valkyrie
     mem_limit: "512mb"
