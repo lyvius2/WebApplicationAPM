@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <property name="consoleLogPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN:-%5p}) [%thread] %clr(${PID:- }){magenta} --- %clr(%F:%L[%M]){cyan} : %msg%n"/>
+    <property name="fileLogPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} [%thread] ${PID:- } --- %F:%L[%M] : %msg%n"/>
+    <property name="logPath" value="./was_logs"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${consoleLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+        </filter>
+        <file>${logPath}/server.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/server.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${fileLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="jdbc" level="${jdbcConfig}" appender-ref="console"/>
+    <logger name="jdbc.sqlonly" level="${jdbcSqlOnly}" appender-ref="console"/>
+    <logger name="jdbc.sqltiming" level="${jdbcSqlTiming}" appender-ref="console"/>
+    <logger name="jdbc.resultsettable" level="${jdbcResultSetTable}" appender-ref="console"/>
+    <logger name="jdbc.audit" level="${jdbcAudit}" appender-ref="console"/>
+    <logger name="jdbc.resultset" level="${jdbcResultSet}" appender-ref="console"/>
+    <logger name="jdbc.connection" level="${jdbcConnection}" appender-ref="console"/>
+
+    <springProfile name="default">
+        <root level="info">
+            <appender-ref ref="console"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="live">
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </root>
+    </springProfile>
+</configuration>

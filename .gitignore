@@ -1,2 +1,5 @@
 .idea
 /.idea
+/was_logs
+/container/grafana/volume/**
+/container/prometheus/volume/**
