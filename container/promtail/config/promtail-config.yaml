@@ -1,0 +1,30 @@
+server:
+  http_listen_port: 19080
+  grpc_listen_port: 0
+
+positions:
+  filename: ../volume/positions.yaml
+
+clients:
+  - url: http://127.0.0.1:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: springboot-monitoring
+    pipeline_stages:
+    - match:
+        selector: '{name="springboot-api"}'
+        stages:
+          - multiline:
+              firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+              max_wait_time: 3s
+          - regex:
+              expression: '^(?P<time>\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2},d{3}) (?P<message>(?s:.*))$$'
+          - timestamp:
+              format: RFC3339Nano
+              source: timestamp
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: springboot-api
+          __path__: ../../was_logs/*log
