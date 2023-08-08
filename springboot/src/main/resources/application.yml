@@ -6,6 +6,7 @@ server:
       #directory:
       max-days: 15
       request-attributes-enabled: true
+      pattern: '%h %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"'
 
 spring:
   application:
