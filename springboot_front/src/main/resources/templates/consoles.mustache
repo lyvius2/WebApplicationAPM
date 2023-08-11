@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>게임기 리스트 ^^</title>
+	<link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+	<script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+</head>
+<body class="bg-light">
+<div class="container-sm">
+	<main>
+		<nav class="navbar navbar-light">
+			<p class="navbar-brand">게임 콘솔 목록</p>
+		</nav>
+		<table class="table">
+			<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Console</th>
+				<th scope="col">Manufacturer</th>
+				<th scope="col">Generation</th>
+				<th scope="col">Release Date</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#list}}
+			<tr>
+				<th scope="row">{{seq}}</th>
+				<td>{{console}}</td>
+				<td>{{manufacturerCompany}}</td>
+				<td>{{generation}}세대</td>
+				<td>{{releaseDate}}</td>
+			</tr>
+			{{/list}}
+			</tbody>
+		</table>
+	</main>
+	<footer class="my-3 text-muted text-small">
+	</footer>
+</div>
+</body>
+</html>

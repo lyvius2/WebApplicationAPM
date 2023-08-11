@@ -1,9 +1,21 @@
 server:
   port: 7979
+  servlet:
+    encoding:
+      force-response: true
 
 spring:
   application:
     name: springboot-front
+  cloud:
+    openfeign:
+      client:
+        config:
+          console.url: http://127.0.0.1:8080
+      micrometer:
+        enabled: true
+      circuitbreaker:
+        enabled: true
 
 management:
   endpoint:
