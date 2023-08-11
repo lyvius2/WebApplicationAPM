@@ -38,7 +38,7 @@ public class GameConsoleController {
 	}
 
 	@Operation(summary = "게임 콘솔 목록 조회", description = "전체 게임 콘솔 목록 조회 API")
-	@GetMapping("/")
+	@GetMapping("")
 	public List<GameConsoleV1> getGameConsoles() {
 		final List<GameConsole> gameConsoles = gameConsoleService.getConsoles();
 		return gameConsoles.stream().map(GameConsoleMapper.INSTANCE::from)
@@ -46,7 +46,7 @@ public class GameConsoleController {
 	}
 
 	@Operation(summary = "게임 콘솔 등록", description = "게임 콘솔 정보 등록 API")
-	@PostMapping("/")
+	@PostMapping("")
 	public void createGameConsole(@RequestBody @Validated GameConsoleParam param) {
 		gameConsoleService.createConsole(param);
 	}
